@@ -1,22 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import { InventoryItem } from "@/lib/types";
 
-:root {
-  color-scheme: light;
+export const DEFAULT_TARGET_STOCK = 2;
+export const STATUS_OPTIONS = ["Available", "Reserved", "Sold Not Delivered", "Delivered", "Discontinued"] as const;
+
+export function getPhysicalTotal(row: InventoryItem) {
+  return Number(row.showroom_qty || 0) + Number(row.warehouse_qty || 0);
 }
 
-html, body {
-  margin: 0;
-  min-height: 100%;
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 45%, #eef2f7 100%);
-  color: #0f172a;
+export function getAvailableToSell(row: InventoryItem) {
+  return Math.max(0, getPhysicalTotal(row) - Number(row.reserved_qty || 0) - Number(row.sold_not_delivered_qty || 0));
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+export function getSuggestedOrderQty(row: InventoryItem) {
+  const needed = Number(row.target_stock || 0) - getAvailableToSell(row) - Number(row.on_order_qty || 0);
+  return Math.max(0, needed);
 }
 
-button, input, select, textarea {
-  font: inherit;
+export function getNeedsReorder(row: InventoryItem) {
+  return getAvailableToSell(row) <= Number(row.order_point || 0) && row.status !== "Discontinued";
+}
+
+export function makeId() {
+  return crypto.randomUUID();
 }
