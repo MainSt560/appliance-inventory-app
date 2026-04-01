@@ -267,8 +267,12 @@ export default function HomePage() {
 
 const { error: saveError } = await supabase.from("inventory_items").upsert(cleanRow);
     if (saveError) {
-      setError(saveError.message);
-      setSaving(false);
+  console.error("SAVE ERROR:", saveError);
+  alert("Save failed: " + saveError.message);
+  setError(saveError.message);
+  setSaving(false);
+  return;
+}
       return;
     }
     if (activityType) await addActivity(activityType, updated.model, qtyChange, notes);
