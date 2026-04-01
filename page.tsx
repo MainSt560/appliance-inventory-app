@@ -139,7 +139,7 @@ function workbookToRows(file: File): Promise<InventoryItem[]> {
 
             if (!model) return;
             importedRows.push({
-              id: makeId(),
+              id: crypto.randomUUID()
               department: sheetName,
               section: currentSection || "General",
               type,
@@ -247,7 +247,7 @@ export default function HomePage() {
 
   async function addActivity(eventType: string, model: string, qtyChange: number, notes = "") {
     await supabase.from("activity_log").insert({
-      id: makeId(),
+      id: ,crypto.randomUUID()
       event_type: eventType,
       model,
       qty_change: qtyChange,
