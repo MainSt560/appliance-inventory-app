@@ -342,21 +342,7 @@ const { error: saveError } = await supabase.from("inventory_items").upsert(clean
     XLSX.writeFile(workbook, "appliance-inventory-live.xlsx");
   }
 
-  async function addNewItem() {
-    if (!newItem.model.trim()) return;
-    const row: InventoryItem = {
-  ...newItem,
-  id: crypto.randomUUID(),
-  product_id: null,
-  model: newItem.model.trim(),
-  showroom_qty: Number(newItem.showroom_qty || 0),
-  warehouse_qty: Number(newItem.warehouse_qty || 0),
-  reserved_qty: Number(newItem.reserved_qty || 0),
-  sold_not_delivered_qty: Number(newItem.sold_not_delivered_qty || 0),
-  delivered_qty: Number(newItem.delivered_qty || 0),
-  on_order_qty: Number(newItem.on_order_qty || 0),
-  order_point: Number(newItem.order_point || 0),
-  target_stock: Number(newItem.target_stock || 0),
+  
 };
     await saveRow(row, "add item", getPhysicalTotal(row), "Added from web app");
     setNewItem(emptyItem);
@@ -364,7 +350,28 @@ const { error: saveError } = await supabase.from("inventory_items").upsert(clean
 
   async function patchSelected(patch: Partial<InventoryItem>, activityType?: string, qtyChange = 0, notes = "") {
     if (!selectedRow) return;
-    const updated = { ...selectedRow, ...patch };
+    const updated = { ...selectasync function addNewItem() {
+  const enteredModel = window.prompt("Enter model number");
+  if (!enteredModel || !enteredModel.trim()) return;
+
+  const row: InventoryItem = {
+    ...newItem,
+    id: crypto.randomUUID(),
+    product_id: null,
+    model: enteredModel.trim(),
+    showroom_qty: Number(newItem.showroom_qty || 0),
+    warehouse_qty: Number(newItem.warehouse_qty || 0),
+    reserved_qty: Number(newItem.reserved_qty || 0),
+    sold_not_delivered_qty: Number(newItem.sold_not_delivered_qty || 0),
+    delivered_qty: Number(newItem.delivered_qty || 0),
+    on_order_qty: Number(newItem.on_order_qty || 0),
+    order_point: Number(newItem.order_point || 0),
+    target_stock: Number(newItem.target_stock || 0),
+  };
+
+  await saveRow(row, "add item", getPhysicalTotal(row), "Added from web app");
+  setNewItem(emptyItem);
+}edRow, ...patch };
     await saveRow(updated, activityType, qtyChange, notes);
   }
 
