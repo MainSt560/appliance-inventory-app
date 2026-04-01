@@ -259,7 +259,13 @@ export default function HomePage() {
   async function saveRow(updated: InventoryItem, activityType?: string, qtyChange = 0, notes = "") {
     setSaving(true);
     setError("");
-    const { error: saveError } = await supabase.from("inventory_items").upsert(updated);
+    const cleanRow = {
+  ...updated,
+  product_id: null,
+  model: updated.model,
+};
+
+const { error: saveError } = await supabase.from("inventory_items").upsert(cleanRow);
     if (saveError) {
       setError(saveError.message);
       setSaving(false);
