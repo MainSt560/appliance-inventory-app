@@ -340,7 +340,7 @@ const { error: saveError } = await supabase.from("inventory_items").upsert(clean
 
   async function addNewItem() {
     if (!newItem.model.trim()) return;
-    const row: InventoryItem = { ...newItem, id: makeId(), model: newItem.model.trim() };
+    const row: InventoryItem = { ...newItem, id:crypto.randomUUID() ), model: newItem.model.trim() };
     await saveRow(row, "add item", getPhysicalTotal(row), "Added from web app");
     setNewItem(emptyItem);
   }
